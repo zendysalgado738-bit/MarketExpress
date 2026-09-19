@@ -17,4 +17,8 @@
     <ProjectReference Include="..\MarketExpress.Catalogo.Infraestructura\MarketExpress.Catalogo.Infraestructura.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
