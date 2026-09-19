@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalogo", "Catalogo", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pedidos", "Pedidos", "{C3EB94E8-1F2B-498A-8B8A-932AC0635BEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notificaciones", "Notificaciones", "{B3DD5C50-9802-4200-A036-320AF12F54D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketExpress.Catalogo.Dominio", "src\Catalogo\MarketExpress.Catalogo.Dominio\MarketExpress.Catalogo.Dominio.csproj", "{8EDCF7E2-E28B-4F96-A307-618D20CD6934}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketExpress.Catalogo.Aplicacion", "src\Catalogo\MarketExpress.Catalogo.Aplicacion\MarketExpress.Catalogo.Aplicacion.csproj", "{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketExpress.Catalogo.Infraestructura", "src\Catalogo\MarketExpress.Catalogo.Infraestructura\MarketExpress.Catalogo.Infraestructura.csproj", "{EC2D19B3-EDC6-4925-9191-AA14362CEF8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketExpress.Catalogo.API", "src\Catalogo\MarketExpress.Catalogo.API\MarketExpress.Catalogo.API.csproj", "{338C89A3-6643-4E55-A494-9802124BDC53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8EDCF7E2-E28B-4F96-A307-618D20CD6934}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EDCF7E2-E28B-4F96-A307-618D20CD6934}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EDCF7E2-E28B-4F96-A307-618D20CD6934}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EDCF7E2-E28B-4F96-A307-618D20CD6934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC2D19B3-EDC6-4925-9191-AA14362CEF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC2D19B3-EDC6-4925-9191-AA14362CEF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC2D19B3-EDC6-4925-9191-AA14362CEF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC2D19B3-EDC6-4925-9191-AA14362CEF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{338C89A3-6643-4E55-A494-9802124BDC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{338C89A3-6643-4E55-A494-9802124BDC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{338C89A3-6643-4E55-A494-9802124BDC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{338C89A3-6643-4E55-A494-9802124BDC53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8EDCF7E2-E28B-4F96-A307-618D20CD6934} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{AA5E54C7-48B5-43D6-8509-C37CEFF18CA1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{EC2D19B3-EDC6-4925-9191-AA14362CEF8A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{338C89A3-6643-4E55-A494-9802124BDC53} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0CCA25C7-CEA0-4758-A8BE-2DF404F1A029}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,6 @@
+@MarketExpress.Catalogo.API_HostAddress = http://localhost:5062
+
+GET {{MarketExpress.Catalogo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
