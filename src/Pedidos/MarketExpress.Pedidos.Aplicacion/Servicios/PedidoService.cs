@@ -38,7 +38,8 @@ public class PedidoService : IPedidoService
                     "La cantidad de cada producto debe ser mayor que cero.");
         }
 
-        var detalles = new List<DetallePedido>();
+        var productosValidados =
+            new List<(ProductoCatalogoDto Producto, int Cantidad)>();
 
         var productosAgrupados = datos.Detalles
             .GroupBy(detalle => detalle.ProductoId);
@@ -47,7 +48,8 @@ public class PedidoService : IPedidoService
         {
             var cantidadTotal = grupo.Sum(detalle => detalle.Cantidad);
 
-            var producto = await _catalogoClient.ObtenerPorIdAsync(grupo.Key);
+            var producto = await _catalogoClient
+                .ObtenerPorIdAsync(grupo.Key);
 
             if (producto is null)
                 throw new KeyNotFoundException(
@@ -57,11 +59,28 @@ public class PedidoService : IPedidoService
                 throw new InvalidOperationException(
                     $"No hay stock suficiente para el producto {producto.Nombre}.");
 
+            productosValidados.Add((producto, cantidadTotal));
+        }
+
+        var detalles = new List<DetallePedido>();
+
+        foreach (var productoValidado in productosValidados)
+        {
+            var productoReservado = await _catalogoClient
+                .ReservarStockAsync(
+                    productoValidado.Producto.Id,
+                    productoValidado.Cantidad);
+
+            if (productoReservado is null)
+                throw new InvalidOperationException(
+                    $"No fue posible reservar el stock del producto " +
+                    $"{productoValidado.Producto.Nombre}.");
+
             detalles.Add(new DetallePedido(
-                producto.Id,
-                producto.Nombre,
-                cantidadTotal,
-                producto.Precio));
+                productoValidado.Producto.Id,
+                productoValidado.Producto.Nombre,
+                productoValidado.Cantidad,
+                productoValidado.Producto.Precio));
         }
 
         var pedido = new Pedido(detalles);
