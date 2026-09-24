@@ -11,7 +11,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<NotificacionesDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("Notificaciones")));
+        builder.Configuration.GetConnectionString("Notificaciones"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)));
 
 builder.Services.AddScoped<
     INotificacionRepository,
@@ -23,7 +27,11 @@ builder.Services.AddScoped<
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+var swaggerHabilitado =
+    app.Environment.IsDevelopment() ||
+    app.Configuration.GetValue<bool>("Swagger:Enabled");
+
+if (swaggerHabilitado)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
