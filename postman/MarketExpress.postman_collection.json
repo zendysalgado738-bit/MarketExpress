@@ -1,0 +1,951 @@
+{
+	"info": {
+		"_postman_id": "32dc3b6c-dea2-43f4-a41f-7ef990866aa8",
+		"name": "MarketExpress - APIs Azure",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "58503735",
+		"_collection_link": "https://zendysalgado738-6294790.postman.co/workspace/Marlon-Gutierrez's-Workspace~f04c4176-6a3d-43a6-8b63-a96044ca5578/collection/58503735-32dc3b6c-dea2-43f4-a41f-7ef990866aa8?action=share&source=collection_link&creator=58503735"
+	},
+	"item": [
+		{
+			"name": "01 - Catálogo",
+			"item": [
+				{
+					"name": "Crear producto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El producto fue creado correctamente\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"\r",
+									"    pm.expect(producto.id).to.exist;\r",
+									"    pm.expect(producto.nombre).to.be.a(\"string\").and.not.empty;\r",
+									"    pm.expect(producto.precio).to.be.above(0);\r",
+									"    pm.expect(producto.stock).to.be.at.least(0);\r",
+									"});\r",
+									"\r",
+									"const producto = pm.response.json();\r",
+									"pm.environment.set(\"producto_id\", producto.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Laptop Alienware\",\r\n  \"precio\": 1250.50,\r\n  \"stock\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar productos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta contiene una lista de productos\", function () {\r",
+									"    const productos = pm.response.json();\r",
+									"\r",
+									"    pm.expect(productos).to.be.an(\"array\");\r",
+									"    pm.expect(productos.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La lista contiene el producto creado\", function () {\r",
+									"    const productos = pm.response.json();\r",
+									"    const productoId = pm.environment.get(\"producto_id\");\r",
+									"\r",
+									"    const encontrado = productos.some(\r",
+									"        producto => producto.id === productoId\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(encontrado).to.eql(true);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Consultar producto por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Devuelve el producto solicitado\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"    const productoId = pm.environment.get(\"producto_id\");\r",
+									"\r",
+									"    pm.expect(producto.id).to.eql(productoId);\r",
+									"    pm.expect(producto.nombre).to.be.a(\"string\").and.not.empty;\r",
+									"    pm.expect(producto.precio).to.be.above(0);\r",
+									"    pm.expect(producto.stock).to.be.at.least(0);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta es JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"const productoConsultado = pm.response.json();\r",
+									"pm.environment.set(\"stock_antes_reserva\", productoConsultado.stock);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos/{{producto_id}}",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"{{producto_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reservar stock",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El stock fue descontado correctamente\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"    const stockAnterior = Number(\r",
+									"        pm.environment.get(\"stock_antes_reserva\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(producto.id).to.eql(\r",
+									"        pm.environment.get(\"producto_id\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(producto.stock).to.eql(stockAnterior - 3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El stock nunca queda negativo\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"    pm.expect(producto.stock).to.be.at.least(0);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cantidad\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos/{{producto_id}}/reservar-stock",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"{{producto_id}}",
+								"reservar-stock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rechazar precio inválido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API rechaza el precio inválido\", function () {\r",
+									"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta llega en menos de 5 segundos\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Producto con precio inválido\",\r\n  \"precio\": 0,\r\n  \"stock\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rechazar stock negativo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API rechaza el stock negativo\", function () {\r",
+									"    const respuesta = pm.response.json();\r",
+									"\r",
+									"    pm.expect(respuesta).to.have.property(\"error\");\r",
+									"    pm.expect(respuesta.error.toLowerCase()).to.include(\"stock\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta llega en menos de 5 segundos\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Producto con stock inválido\",\r\n  \"precio\": 500,\r\n  \"stock\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Rechazar reserva sin stock suficiente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API rechaza la reserva sin stock suficiente\", function () {\r",
+									"    const respuesta = pm.response.json();\r",
+									"\r",
+									"    pm.expect(respuesta).to.have.property(\"error\");\r",
+									"    pm.expect(respuesta.error.toLowerCase()).to.satisfy(\r",
+									"        mensaje =>\r",
+									"            mensaje.includes(\"stock\") ||\r",
+									"            mensaje.includes(\"disponible\")\r",
+									"    );\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta llega en menos de 5 segundos\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"cantidad\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos/{{producto_id}}/reservar-stock",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"{{producto_id}}",
+								"reservar-stock"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Producto inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API no devuelve un producto inexistente\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta llega en menos de 5 segundos\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos/00000000-0000-0000-0000-000000000000",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"00000000-0000-0000-0000-000000000000"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02 - Pedidos",
+			"item": [
+				{
+					"name": "01 - Preparar producto para pedido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El producto para el pedido fue creado\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"\r",
+									"    pm.expect(producto.id).to.exist;\r",
+									"    pm.expect(producto.precio).to.eql(1250.50);\r",
+									"    pm.expect(producto.stock).to.eql(10);\r",
+									"});\r",
+									"\r",
+									"const producto = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\"producto_pedido_id\", producto.id);\r",
+									"pm.environment.set(\"stock_producto_pedido\", producto.stock);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Producto integración Pedidos\",\r\n  \"precio\": 1250.50,\r\n  \"stock\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Crear pedido",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El pedido fue creado correctamente\", function () {\r",
+									"    const pedido = pm.response.json();\r",
+									"\r",
+									"    pm.expect(pedido.id).to.exist;\r",
+									"    pm.expect(pedido.estado).to.eql(\"Pendiente\");\r",
+									"    pm.expect(pedido.detalles).to.be.an(\"array\");\r",
+									"    pm.expect(pedido.detalles).to.have.lengthOf(1);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El pedido contiene el producto solicitado\", function () {\r",
+									"    const pedido = pm.response.json();\r",
+									"    const detalle = pedido.detalles[0];\r",
+									"\r",
+									"    pm.expect(detalle.productoId).to.eql(\r",
+									"        pm.environment.get(\"producto_pedido_id\")\r",
+									"    );\r",
+									"    pm.expect(detalle.cantidad).to.eql(3);\r",
+									"    pm.expect(detalle.precioUnitario).to.eql(1250.50);\r",
+									"    pm.expect(detalle.subtotal).to.eql(3751.50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El total del pedido es correcto\", function () {\r",
+									"    const pedido = pm.response.json();\r",
+									"    pm.expect(pedido.total).to.eql(3751.50);\r",
+									"});\r",
+									"\r",
+									"const pedido = pm.response.json();\r",
+									"pm.environment.set(\"pedido_id\", pedido.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"detalles\": [\r\n    {\r\n      \"productoId\": \"{{producto_pedido_id}}\",\r\n      \"cantidad\": 3\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{pedidos_url}}/api/pedidos",
+							"host": [
+								"{{pedidos_url}}"
+							],
+							"path": [
+								"api",
+								"pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Consultar pedido por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Devuelve el pedido creado\", function () {\r",
+									"    const pedido = pm.response.json();\r",
+									"\r",
+									"    pm.expect(pedido.id).to.eql(\r",
+									"        pm.environment.get(\"pedido_id\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(pedido.estado).to.eql(\"Pendiente\");\r",
+									"    pm.expect(pedido.total).to.eql(3751.50);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El pedido conserva sus detalles\", function () {\r",
+									"    const pedido = pm.response.json();\r",
+									"    const detalle = pedido.detalles[0];\r",
+									"\r",
+									"    pm.expect(pedido.detalles).to.have.lengthOf(1);\r",
+									"    pm.expect(detalle.productoId).to.eql(\r",
+									"        pm.environment.get(\"producto_pedido_id\")\r",
+									"    );\r",
+									"    pm.expect(detalle.cantidad).to.eql(3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta es JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pedidos_url}}/api/pedidos/{{pedido_id}}",
+							"host": [
+								"{{pedidos_url}}"
+							],
+							"path": [
+								"api",
+								"pedidos",
+								"{{pedido_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Verificar stock descontado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Devuelve el producto utilizado en el pedido\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"\r",
+									"    pm.expect(producto.id).to.eql(\r",
+									"        pm.environment.get(\"producto_pedido_id\")\r",
+									"    );\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El pedido descontó correctamente el stock\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"    const stockInicial = Number(\r",
+									"        pm.environment.get(\"stock_producto_pedido\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(producto.stock).to.eql(stockInicial - 3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"El stock resultante es 7\", function () {\r",
+									"    const producto = pm.response.json();\r",
+									"\r",
+									"    pm.expect(producto.stock).to.eql(7);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{catalogo_url}}/api/productos/{{producto_pedido_id}}",
+							"host": [
+								"{{catalogo_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"{{producto_pedido_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "05 - Pedido inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API no devuelve un pedido inexistente\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta llega en menos de 5 segundos\", function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{pedidos_url}}/api/pedidos/11111111-1111-1111-1111-111111111111",
+							"host": [
+								"{{pedidos_url}}"
+							],
+							"path": [
+								"api",
+								"pedidos",
+								"11111111-1111-1111-1111-111111111111"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03 - Notificaciones",
+			"item": [
+				{
+					"name": "01 - Crear notificación",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La notificación fue creada correctamente\", function () {\r",
+									"    const notificacion = pm.response.json();\r",
+									"\r",
+									"    pm.expect(notificacion.id).to.exist;\r",
+									"    pm.expect(notificacion.pedidoId).to.eql(\r",
+									"        pm.environment.get(\"pedido_id\")\r",
+									"    );\r",
+									"    pm.expect(notificacion.destinatario)\r",
+									"        .to.eql(\"cliente@marketexpress.com\");\r",
+									"    pm.expect(notificacion.estado).to.eql(\"Pendiente\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La notificación contiene el mensaje enviado\", function () {\r",
+									"    const notificacion = pm.response.json();\r",
+									"\r",
+									"    pm.expect(notificacion.mensaje)\r",
+									"        .to.eql(\"Su pedido fue registrado correctamente en Azure.\");\r",
+									"    pm.expect(notificacion.fechaCreacion).to.exist;\r",
+									"});\r",
+									"\r",
+									"const notificacion = pm.response.json();\r",
+									"\r",
+									"pm.environment.set(\r",
+									"    \"notificacion_id\",\r",
+									"    notificacion.id\r",
+									");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"pedidoId\": \"{{pedido_id}}\",\r\n  \"destinatario\": \"cliente@marketexpress.com\",\r\n  \"mensaje\": \"Su pedido fue registrado correctamente en Azure.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{notificaciones_url}}/api/notificaciones",
+							"host": [
+								"{{notificaciones_url}}"
+							],
+							"path": [
+								"api",
+								"notificaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02 - Listar notificaciones",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta contiene una lista\", function () {\r",
+									"    const notificaciones = pm.response.json();\r",
+									"\r",
+									"    pm.expect(notificaciones).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La lista contiene la notificación creada\", function () {\r",
+									"    const notificaciones = pm.response.json();\r",
+									"    const notificacionId = pm.environment.get(\"notificacion_id\");\r",
+									"\r",
+									"    const encontrada = notificaciones.some(\r",
+									"        notificacion => notificacion.id === notificacionId\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(encontrada).to.eql(true);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta es JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{notificaciones_url}}/api/notificaciones",
+							"host": [
+								"{{notificaciones_url}}"
+							],
+							"path": [
+								"api",
+								"notificaciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03 - Consultar notificación por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Devuelve la notificación creada\", function () {\r",
+									"    const notificacion = pm.response.json();\r",
+									"\r",
+									"    pm.expect(notificacion.id).to.eql(\r",
+									"        pm.environment.get(\"notificacion_id\")\r",
+									"    );\r",
+									"\r",
+									"    pm.expect(notificacion.pedidoId).to.eql(\r",
+									"        pm.environment.get(\"pedido_id\")\r",
+									"    );\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Los datos de la notificación son correctos\", function () {\r",
+									"    const notificacion = pm.response.json();\r",
+									"\r",
+									"    pm.expect(notificacion.destinatario)\r",
+									"        .to.eql(\"cliente@marketexpress.com\");\r",
+									"\r",
+									"    pm.expect(notificacion.mensaje)\r",
+									"        .to.eql(\"Su pedido fue registrado correctamente en Azure.\");\r",
+									"\r",
+									"    pm.expect(notificacion.estado).to.eql(\"Pendiente\");\r",
+									"    pm.expect(notificacion.fechaCreacion).to.exist;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta es JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{notificaciones_url}}/api/notificaciones/{{notificacion_id}}",
+							"host": [
+								"{{notificaciones_url}}"
+							],
+							"path": [
+								"api",
+								"notificaciones",
+								"{{notificacion_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "04 - Notificación inexistente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Estado HTTP 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La API no devuelve una notificación inexistente\", function () {\r",
+									"    pm.expect(pm.response.code).to.eql(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta informa el error\", function () {\r",
+									"    const respuesta = pm.response.json();\r",
+									"\r",
+									"    pm.expect(respuesta).to.have.property(\"error\");\r",
+									"    pm.expect(respuesta.error).to.be.a(\"string\").and.not.empty;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"La respuesta es JSON\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{notificaciones_url}}/api/notificaciones/11111111-1111-1111-1111-111111111111",
+							"host": [
+								"{{notificaciones_url}}"
+							],
+							"path": [
+								"api",
+								"notificaciones",
+								"11111111-1111-1111-1111-111111111111"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
