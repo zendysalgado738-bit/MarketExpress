@@ -12,7 +12,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<PedidosDbContext>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("Pedidos")));
+        builder.Configuration.GetConnectionString("Pedidos"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)));
 
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
@@ -28,8 +32,11 @@ builder.Services.AddHttpClient<
     });
 
 var app = builder.Build();
+var swaggerHabilitado =
+    app.Environment.IsDevelopment() ||
+    app.Configuration.GetValue<bool>("Swagger:Enabled");
 
-if (app.Environment.IsDevelopment())
+if (swaggerHabilitado)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
