@@ -216,8 +216,8 @@ MarketExpress/
 Proyecto desarrollado por:
 
 - Marlon Gutiérrez
-- Valentino
-- Frank
+- Valentino Mejia
+- Francklin Chavez
 
 ## Estado del proyecto
 
